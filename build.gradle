@@ -11,6 +11,11 @@ plugins {
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
+// Querydsl 플러그인 설정
+querydsl {
+    jpa = true // JPA 프로젝트인 경우에만 활성화
+    querydslSourcesDir = "$buildDir/generated/querydsl" // Querydsl 소스 코드를 생성할 디렉토리 지정
+}
 
 
 group = 'com.example'
@@ -38,6 +43,7 @@ apply plugin: "com.ewerk.gradle.plugins.querydsl"
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'com.querydsl:querydsl-jpa'
     implementation 'com.querydsl:querydsl-apt'
     compileOnly 'org.projectlombok:lombok'
@@ -52,6 +58,19 @@ tasks.named('test') {
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
+
+
+// 새로운 태스크 추가
+task myBuildTask {
+    doLast {
+        println '새로운 빌드 작업을 수행합니다.'
+        println "build dir :: $buildDir"
+    }
+}
+
+// 기존 build 태스크에 새로운 태스크를 의존성으로 추가
+build.dependsOn myBuildTask
+
 
 querydsl {
     library = "com.querydsl:querydsl-apt"
