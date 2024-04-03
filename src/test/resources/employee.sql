@@ -1,0 +1,13 @@
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('이현우', '서울시 종로구', '19900531', '', '2020-05-02', null, 56000000, 1);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('김이나', '서울시 마포구', '19820305', '', '2017-08-13', null, 76000000, 2);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('이서현', '서울시 영등포구', '19920409', '', '2020-03-11', null, 53000000, 2);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('김나박', '서울시 용산구', '19911205', '', '2022-06-12', null, 52000000, 1);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('박이수', '서울시 강동구', '19870412', '', '2021-03-12', null, 66000000, 3);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('최나연', '서울시 강서구', '19861217', '', '2021-04-15', null, 73000000, 3);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('이서준', '경기도 안양시', '19810503', '', '2023-04-11', null, 85000000, 2);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('서이나', '경기도 광명시', '19890624', '', '2022-12-11', null, 63000000, 3);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('우연우', '경기도 파주시', '19920724', '', '2019-01-12', null, 51000000, 1);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('김지나', '경기도 성남시', '19910203', '', '2018-01-15', null, 52000000, 1);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('이정현', '경기도 성남시', '19921005', '', '2020-03-08', null, 49000000, 2);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('박인수', '인천광역시 부평구', '19881115', '', '2017-05-19', null, 87000000, 1);
+INSERT INTO employee(name, address, birth_date, email, join_date, reti_date, salary, dept_seq) VALUES ('김정현', '인천광역시 계양구', '19890306', '', '2017-05-19', null, 67000000, 3);
