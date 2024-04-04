@@ -1,8 +1,8 @@
 package com.example.springbootjpa.biz.service;
 
 import com.example.springbootjpa.biz.entity.Employee;
-import com.example.springbootjpa.biz.domain.QDept;
-import com.example.springbootjpa.biz.domain.QEmployee;
+import com.example.springbootjpa.biz.entity.QDept;
+import com.example.springbootjpa.biz.entity.QEmployee;
 import com.example.springbootjpa.framework.config.QuerydslConfig;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.DisplayName;
@@ -22,12 +22,14 @@ public class EmployeeQuerydslSelectTest {
     @Autowired
     private JPAQueryFactory query;
 
+    QEmployee employee = QEmployee.employee;
+    QDept dept = QDept.dept;
+
 
     @Test
     @DisplayName("queryDsl조회")
     void test1() {
-        QEmployee employee = QEmployee.employee;
-        QDept dept = QDept.dept;
+
 
         List<Employee> employees = query.selectFrom(employee).fetch();
 

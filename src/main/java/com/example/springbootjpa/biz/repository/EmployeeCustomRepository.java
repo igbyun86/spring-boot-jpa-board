@@ -12,9 +12,9 @@ import java.util.List;
 public interface EmployeeCustomRepository {
 
     Page<Employee> findAllPaging(Pageable pageable);
+    List<Employee> findAllByCondition(EmployeeSearchCondition condition);
     List<Employee> findAllByCondition(Predicate predicate);
     Page<Employee> findAllPagingByCondition(Predicate predicate, Pageable pageable);
 
     List<EmployeeDeptDTO> findEmployeeDeptByCondition(Predicate predicate);
-    List<EmployeeDeptDTO> findEmployeeDeptByCondition(EmployeeSearchCondition condition);
 }

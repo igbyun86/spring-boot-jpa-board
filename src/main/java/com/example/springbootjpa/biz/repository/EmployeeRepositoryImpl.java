@@ -1,8 +1,8 @@
 package com.example.springbootjpa.biz.repository;
 
 import com.example.springbootjpa.biz.condition.EmployeeSearchCondition;
-import com.example.springbootjpa.biz.entity.Employee;
 import com.example.springbootjpa.biz.dto.EmployeeDeptDTO;
+import com.example.springbootjpa.biz.entity.Employee;
 import com.example.springbootjpa.biz.entity.QDept;
 import com.example.springbootjpa.biz.entity.QEmployee;
 import com.querydsl.core.BooleanBuilder;
@@ -11,7 +11,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -70,6 +69,13 @@ public class EmployeeRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
+    public List<Employee> findAllByCondition(EmployeeSearchCondition condition) {
+        JPAQuery<Employee> query = queryFactory.selectFrom(employee).where(getEmployeeQueryCondition(condition));
+
+        return query.fetch();
+    }
+
+    @Override
     public Page<Employee> findAllPagingByCondition(Predicate predicate, Pageable pageable) {
         JPAQuery<?> query = queryFactory.from(employee).where(predicate);
 
@@ -96,20 +102,6 @@ public class EmployeeRepositoryImpl extends QuerydslRepositorySupport implements
                 .fetch();
     }
 
-    @Override
-    public List<EmployeeDeptDTO> findEmployeeDeptByCondition(EmployeeSearchCondition condition) {
-        return queryFactory.select(Projections.constructor(EmployeeDeptDTO.class,
-                        employee.name,
-                        employee.address,
-                        employee.birthDate,
-                        employee.salary,
-                        dept.deptName
-                ))
-                .from(employee)
-                .innerJoin(employee.dept, dept)
-                .where(getEmployeeQueryCondition(condition))
-                .fetch();
-    }
 
     private BooleanBuilder getEmployeeQueryCondition(EmployeeSearchCondition condition) {
         BooleanBuilder builder = new BooleanBuilder();

@@ -1,8 +1,7 @@
 package com.example.springbootjpa.biz.repository;
 
-import com.example.springbootjpa.biz.condition.EmployeeSearchCondition;
-import com.example.springbootjpa.biz.entity.Employee;
 import com.example.springbootjpa.biz.dto.EmployeeDeptDTO;
+import com.example.springbootjpa.biz.entity.Employee;
 import com.example.springbootjpa.biz.entity.QEmployee;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.hibernate.LazyInitializationException;
@@ -55,7 +54,7 @@ public class EmployeeRepositoryTest {
     @Test
     @DisplayName("employee, dept fetch 조인 후 DTO 반환")
     void test5() {
-        List<EmployeeDeptDTO> employeeDeptByCondition = employeeRepository.findEmployeeDeptByCondition(EmployeeSearchCondition.builder().build());
+        List<EmployeeDeptDTO> employeeDeptByCondition = employeeRepository.findEmployeeDeptByCondition(null);
         assertThat(employeeDeptByCondition).isNotEmpty();
     }
 
