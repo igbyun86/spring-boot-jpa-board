@@ -1,4 +1,4 @@
-package com.example.springbootjpa.biz.domain;
+package com.example.springbootjpa.biz.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
