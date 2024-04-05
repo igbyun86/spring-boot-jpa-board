@@ -30,6 +30,20 @@ public class EmployeeRepositoryTest {
     void test1() {
         List<Employee> employees = employeeRepository.findAll();
         assertThat(employees).isNotEmpty();
+        /*
+    select
+        employee0_.emp_no as emp_no1_1_,
+        employee0_.address as address2_1_,
+        employee0_.birth_date as birth_da3_1_,
+        employee0_.dept_seq as dept_seq9_1_,
+        employee0_.email as email4_1_,
+        employee0_.join_date as join_dat5_1_,
+        employee0_.name as name6_1_,
+        employee0_.reti_date as reti_dat7_1_,
+        employee0_.salary as salary8_1_
+    from
+        employee employee0_
+         */
     }
 
     @Test

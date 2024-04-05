@@ -8,16 +8,17 @@ import com.example.springbootjpa.biz.entity.QEmployee;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -26,7 +27,6 @@ import java.util.List;
 @Repository
 public class EmployeeRepositoryImpl extends QuerydslRepositorySupport implements EmployeeCustomRepository {
 
-    @Autowired
     private final JPAQueryFactory queryFactory;
 
     QEmployee employee = QEmployee.employee;
@@ -36,18 +36,23 @@ public class EmployeeRepositoryImpl extends QuerydslRepositorySupport implements
         super(Employee.class);
         this.queryFactory = queryFactory;
 
-
-        //jpaQueryFactory = new JPAQueryFactory(entityManager);
     }
 
     @Override
     public Page<Employee> findAllPaging(Pageable pageable) {
         JPAQuery<Employee> query = queryFactory.selectFrom(employee);
 
+
         JPQLQuery<Employee> pagination = getQuerydsl().applyPagination(pageable, query);
 
+        JPAQuery<Long> employeeTotalCountQuery = queryFactory
+                .select(employee.count())
+                .from(employee);
 
-        return new PageImpl<>(pagination.fetch(), pageable, query.fetchCount());
+        Long total = employeeTotalCountQuery.fetchOne();
+        if (ObjectUtils.isEmpty(total)) total = 0L;
+
+        return new PageImpl<>(pagination.fetch(), pageable, total);
     }
 
     public Page findAllWithCount(Predicate predicate, Pageable pageable) {
@@ -70,7 +75,11 @@ public class EmployeeRepositoryImpl extends QuerydslRepositorySupport implements
 
     @Override
     public List<Employee> findAllByCondition(EmployeeSearchCondition condition) {
-        JPAQuery<Employee> query = queryFactory.selectFrom(employee).where(getEmployeeQueryCondition(condition));
+        JPAQuery<Employee> query = queryFactory.selectFrom(employee)
+                .where(
+                        nameEq(condition.getName()),
+                        addressStartWith(condition.getAddress())
+                );
 
         return query.fetch();
     }
@@ -102,19 +111,11 @@ public class EmployeeRepositoryImpl extends QuerydslRepositorySupport implements
                 .fetch();
     }
 
-
-    private BooleanBuilder getEmployeeQueryCondition(EmployeeSearchCondition condition) {
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (StringUtils.hasText(condition.getName())) {
-            builder.and(employee.name.eq(condition.getName()));
-        }
-
-        if (StringUtils.hasText(condition.getAddress())) {
-            builder.and(employee.address.startsWith(condition.getAddress()));
-        }
-
-        return builder;
+    private BooleanExpression nameEq(String name) {
+        return StringUtils.hasText(name) ? employee.name.eq(name) : null;
     }
 
+    private BooleanExpression addressStartWith(String address) {
+        return StringUtils.hasText(address) ? employee.name.startsWith(address) : null;
+    }
 }
