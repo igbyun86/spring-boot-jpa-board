@@ -6,9 +6,8 @@ import com.example.springbootjpa.biz.entity.Employee;
 import com.example.springbootjpa.biz.entity.QDept;
 import com.example.springbootjpa.biz.entity.QEmployee;
 import com.example.springbootjpa.common.jpa.OrderByNull;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -36,14 +35,14 @@ public class EmployeeSelectTest {
 
     @Test
     @DisplayName("querydsl 조회")
-    void selectEmployeeTest() {
+    void selectEmployee() {
         List<Employee> employees = query.selectFrom(employee).fetch();
         assertThat(employees).isNotEmpty();
     }
 
     @Test
     @DisplayName("exists 조회")
-    void selectEmployeeExistsTest() {
+    void selectEmployeeExists() {
         boolean exists = query.selectFrom(employee)
                 .where(employee.address.contains("안양"))
                 .fetchOne() != null;
@@ -53,7 +52,7 @@ public class EmployeeSelectTest {
 
     @Test
     @DisplayName("정렬 조회")
-    void selectEmployeeOrderTest() {
+    void selectEmployeeOrder() {
         List<Employee> employees = query.selectFrom(employee)
                 .orderBy(employee.joinDate.asc(), employee.birthDate.desc())
                 .fetch();
@@ -80,7 +79,7 @@ public class EmployeeSelectTest {
 
     @Test
     @DisplayName("그룹핑 조회")
-    void selectGroupingTest() {
+    void selectGrouping() {
         List<Long> result = query.
                 select(employee.dept.deptSeq)
                 .from(employee)
@@ -94,7 +93,7 @@ public class EmployeeSelectTest {
 
     @Test
     @DisplayName("커버링 인덱스 조회")
-    void selectCoveringIndexTest() {
+    void selectCoveringIndex() {
         //인덱스 컬럼을 조회컬럼으로 먼저 조회후 인덱스 조건으로 다시한번 조회한다.
         List<Long> ids = query.select(employee.empNo)
                 .from(employee)
@@ -128,7 +127,7 @@ public class EmployeeSelectTest {
 
     @Test
     @DisplayName("select subquery 조회")
-    void selectSubQueryTest() {
+    void selectSubQuery() {
         Expression<String> subQueryDeptName = ExpressionUtils.as(
                 JPAExpressions.select(dept.deptName)
                         .from(dept)
@@ -171,7 +170,7 @@ public class EmployeeSelectTest {
 
     @Test
     @DisplayName("select subquery where절 조회")
-    void selectSubQueryWhereTest() {
+    void selectSubQueryWhere() {
         JPQLQuery<Long> subQueryWhere = JPAExpressions
                 .select(employee.empNo)
                 .from(employee)
@@ -208,4 +207,48 @@ public class EmployeeSelectTest {
             )
          */
     }
+
+    @Test
+    @DisplayName("동적 order by 조회")
+    void dynamicOrderby() {
+
+        List<OrderSpecifier> orderSpecifierList = new ArrayList<>();
+
+        PathBuilder<Employee> pathBuilder = new PathBuilder<>(Employee.class, "employee");
+
+        orderSpecifierList.add(new OrderSpecifier(Order.valueOf("ASC"), pathBuilder.get("name")));
+        orderSpecifierList.add(new OrderSpecifier(Order.DESC, employee.joinDate));
+        orderSpecifierList.add(new OrderSpecifier(Order.DESC, employee.birthDate));
+
+        OrderSpecifier[] orderSpecifiers = orderSpecifierList.toArray(new OrderSpecifier[orderSpecifierList.size()]);
+
+        List<Employee> employees = query
+                .selectFrom(employee)
+                .orderBy(orderSpecifiers)
+                .fetch();
+
+        assertThat(employees).hasSizeGreaterThan(1);
+
+
+        /*
+            select
+                employee0_.emp_no as emp_no1_1_,
+                employee0_.address as address2_1_,
+                employee0_.birth_date as birth_da3_1_,
+                employee0_.dept_seq as dept_seq9_1_,
+                employee0_.email as email4_1_,
+                employee0_.join_date as join_dat5_1_,
+                employee0_.name as name6_1_,
+                employee0_.reti_date as reti_dat7_1_,
+                employee0_.salary as salary8_1_
+            from
+                employee employee0_
+            order by
+                employee0_.name asc,
+                employee0_.join_date desc,
+                employee0_.birth_date desc
+         */
+    }
+
+    //조건1에 따라 조건2 동적변경
 }
