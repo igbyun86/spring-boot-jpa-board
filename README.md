@@ -1,4 +1,4 @@
-# JPA Reference
+# Querydsl Reference
 http://querydsl.com/static/querydsl/3.5.0/reference/ko-KR/html/ch01.html
 
 ### 1.2 
